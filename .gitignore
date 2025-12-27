@@ -1,3 +1,11 @@
-/MineDB/
+# Python cache
+__pycache__/
+*.pyc
+
+# Ignore runtime data & secrets inside MineDB
+MineDB/data/
+MineDB/secrets/
+
+# Ignore keys and data files everywhere
 *.key
 *.dat
