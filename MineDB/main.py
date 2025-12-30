@@ -1,8 +1,9 @@
 from .basicCommands import BasicCommands
+from .dataCommands import DataCommands
 from cryptography.fernet import Fernet
 import json
 import os
-class MineDB(BasicCommands):
+class MineDB(BasicCommands, DataCommands):
     version = "1.1v"
     existing_db={"sample":{"data":{"version":"1.1v","developer":"hrs_developers"}}}
     __path = os.path.join(os.getcwd(), "MineDB", "secure.dat")

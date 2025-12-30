@@ -2,11 +2,15 @@ from MineDB import MineDB
 
 mdb = MineDB()
 
-mdb.showCollection("Disha_College","Teachers")
-mdb.alterAddFiled("Disha_College", "Teachers","Bonus","float")
-mdb.showCollection("Disha_College","Teachers")
+mdb.setDB("Disha_College")
+mdb.setCollection("Teachers")
 
+db = mdb.getDB()
+col = mdb.getCollection()
 
+mdb.showCollection(db, col)
+mdb.exploreAll()
+mdb.explore("name")
 
 
 

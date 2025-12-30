@@ -46,6 +46,9 @@ class BasicCommands:
             print("\nError : showDB : All parameters should be string")
     
     def dropDB(self,dbName:str):
+        if dbName == "sample":
+            print("MineDB : sample database is not dropable")
+            return
         if not self.__checkIns([dbName], "dropDB"):
             return
         try:
@@ -58,6 +61,9 @@ class BasicCommands:
     
     def renameDB(self, dbName:str, newName:str):
         if not self.__checkIns([dbName, newName], "renameDB"):
+            return
+        if dbName == "sample":
+            print("MineDB : sample database is not renameable")
             return
         try:
             tempDB = {}
@@ -118,14 +124,16 @@ class BasicCommands:
             return
         try:
             if dbName in self.existing_db:
-                print(f"\ncollections of {dbName}: ",)
                 if colName != None:
                     if colName in self.existing_db[dbName]:
-                        print(f"{colName} : {self.existing_db[dbName][colName]}")  
+                        print(f"\ncollection of {dbName} : {colName}",)
+                        for value in self.existing_db[dbName][colName]:
+                            print(f"{value} : {self.existing_db[dbName][colName][value]["dataType"]}")  
                     else:
                         print("\nError : showCollection : Collection not exist")
                         return
                 else:
+                    print(f"\ncollections of {dbName} :",)
                     for col in self.existing_db[dbName]:
                         print(col, end=" ")
             else:
