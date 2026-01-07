@@ -8,10 +8,10 @@ mdb.setCollection("Teachers")
 db = mdb.getDB()
 col = mdb.getCollection()
 
-mdb.showCollection(db, col)
 mdb.exploreAll()
-mdb.explore("name")
-
+mdb.modify("name","Rajat","name","Mohan")
+mdb.remove("name","Rajat")
+mdb.exploreAll()
 
 
 '''mdb.createDB(True)

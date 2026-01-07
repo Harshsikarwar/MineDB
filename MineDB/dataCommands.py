@@ -1,6 +1,8 @@
 class DataCommands:
     currDB = "sample"
     currColl = "data"
+
+#datatype and value validation commands
     def __checkIns(self, value=[], source=None):
         for v in value:
             if v == None:
@@ -30,7 +32,7 @@ class DataCommands:
         #checking valiadation of loading/modifing data
         for key, value in loadData.items():
             if key in self.existing_db[self.currDB][self.currColl]:
-                if value == None or "None":
+                if value == None or value == "None":
                     continue
                 if self.__checkValueType(value,source) != self.existing_db[self.currDB][self.currColl][key]["dataType"]:
                     print(f"\nError : {source} : Invalid data type of value {value}")
@@ -40,6 +42,7 @@ class DataCommands:
                 return False
         return True
 
+#get and set commands
     def getDB(self):
         print(f"\nMineDB : Currrent Database : {self.currDB}")
         return self.currDB
@@ -76,6 +79,7 @@ class DataCommands:
         except(AttributeError, TypeError, NameError):
             print("\nError : setDB : All parameters should be string")
 
+#major data commands
     def load(self, **kwargs):
         try:
             if len(self.existing_db[self.currDB][self.currColl]) == len(kwargs):
@@ -89,11 +93,40 @@ class DataCommands:
         except(AttributeError, TypeError, NameError):
             print("\nError : load : All parameters should be string")
 
-    def modify(self):
-        pass
+    def modify(self, search_by, search_value, update_field, new_value):
+        if self.__checkValue({search_by:search_value,update_field:new_value},"modify"):
+            isPresent=0
+            value_array = self.existing_db[self.currDB][self.currColl][search_by]["items"]
+            for search in range(0,len(value_array)):
+                if value_array[search] == search_value:
+                    isPresent += 1
+                    pos = search
+                    self.existing_db[self.currDB][self.currColl][update_field]["items"][pos] = new_value
+                    
+            if isPresent == 0:
+                print("\nError : modify : search_value not exist")
+            else:
+                print(f"\nMineDB : modify : {isPresent} value(s) modified")
+        else:
+            return
 
-    def erase(self):
-        pass
+    def remove(self, search_by, search_value):
+        if self.__checkValue({search_by:search_value},"modify"):
+            isPresent=0
+            value_array = self.existing_db[self.currDB][self.currColl][search_by]["items"]
+            for check in range(len(value_array)):
+                if search_value in value_array:
+                    isPresent += 1
+                    pos = value_array.index(search_value)
+                    for del_field in self.existing_db[self.currDB][self.currColl]:
+                        self.existing_db[self.currDB][self.currColl][del_field]["items"].pop(pos)
+                    
+            if isPresent == 0:
+                print("\nError : remove : search_value not exist")
+            else:
+                print(f"\nMineDB : remove : {isPresent} value(s) removed")
+        else:
+            return
 
     def explore(self,*args, condition=None):
         print(f"\nMineDB : Exploring : {self.currColl}")
@@ -105,7 +138,9 @@ class DataCommands:
                     print("Error : explore : Field not exist")
 
     def exploreAll(self):
-        print(f"\nMineDB : Exploring All : {self.currColl}")
-        for value in self.existing_db[self.currDB][self.currColl]:
-            print(value," : ",self.existing_db[self.currDB][self.currColl][value]["items"])
-        print()
+        try:
+            print(f"\nMineDB : Exploring All : {self.currColl}")
+            for value in self.existing_db[self.currDB][self.currColl]:
+                print(value," : ",self.existing_db[self.currDB][self.currColl][value]["items"])
+        except(TypeError):
+            print("\nError : exploreAll : something went wrong, check setup of database and column")
