@@ -1,155 +1,147 @@
 class DataCommands:
-    currDB = "sample"
-    currColl = "data"
 
 #datatype and value validation commands
-    def __checkIns(self, value=[], source=None):
+    def __checkIns(self, value, source=None):
         for v in value:
             if v == None:
                 continue
             if not isinstance(v, str):
-                print(f"\nError : valueError : {source} : Value should be string")
-                return False
+                raise ValueError(f"Error : valueError : {source} : Value should be string")
         return  True
 
     def __checkValueType(self, value, source=None):
-        if type(value) == str:
+        if isinstance(value,str):
             if len(value) > 1:
                 return "text"
             else:
                 return "chr"
-        elif type(value) == int:
-            return 'int'
-        elif type(value) == float:
-            return 'float'
-        elif type(value) == bool:
+        elif isinstance(value,bool):
             return 'bool'
+        elif isinstance(value,int):
+            return 'int'
+        elif isinstance(value, float):
+            return 'float'
         else:
-            print(f"\nError : {source} : Invalid data type of value {value}")
-            return None
+            raise ValueError(f"Error : {source} : Invalid data type of value {value}")
 
-    def __checkValue(self, loadData={}, source=None):
+    def __checkValue(self, loadData, source=None):
         #checking valiadation of loading/modifing data
         for key, value in loadData.items():
             if key in self.existing_db[self.currDB][self.currColl]:
                 if value == None or value == "None":
                     continue
                 if self.__checkValueType(value,source) != self.existing_db[self.currDB][self.currColl][key]["dataType"]:
-                    print(f"\nError : {source} : Invalid data type of value {value}")
-                    return False
+                    raise ValueError(f"Error : {source} : Invalid data type of value {value}")
             else:
-                print(f"\nError : {source} : Field not exist")
-                return False
+                raise KeyError(f"Error : {source} : Field not exist")
         return True
 
 #get and set commands
     def getDB(self):
-        print(f"\nMineDB : Currrent Database : {self.currDB}")
         return self.currDB
 
     def getCollection(self):
-        print(f"\nMineDB : Current Collection : {self.currColl}")
         return self.currColl
 
     def setDB(self, dbName):
-        try:
-            if not self.__checkIns([dbName],"setDB"):
-                return
-            if dbName.isidentifier():
-                if dbName in self.existing_db:
-                    self.currDB = dbName
-                else:
-                    print("\nError : setDB : Database not exist")
+        if not self.__checkIns([dbName],"setDB"):
+            return
+        if dbName.isidentifier():
+            if dbName in self.existing_db:
+                self.currDB = dbName
             else:
-                print("\nError : setDB : Invalid identifier")
-        except(AttributeError, TypeError, NameError):
-            print("\nError : setDB : All parameters should be string")
+                raise KeyError("Error : setDB : Database not exist")
+        else:
+            raise ValueError("Error : setDB : Invalid identifier")
 
     def setCollection(self, colName):
-        try:
-            if not self.__checkIns([colName],"setCollection"):
-                return
-            if colName.isidentifier():
-                if colName in self.existing_db[self.currDB]:
-                    self.currColl = colName
-                else:
-                    print("\nError : setCollection : Collection not exist")
+        if not self.__checkIns([colName],"setCollection"):
+            return
+        if colName.isidentifier():
+            if colName in self.existing_db[self.currDB]:
+                self.currColl = colName
             else:
-                print("\nError : setCollection : Invalid identifier")
-        except(AttributeError, TypeError, NameError):
-            print("\nError : setDB : All parameters should be string")
+                raise KeyError("Error : setCollection : Collection not exist")
+        else:
+            raise ValueError("Error : setCollection : Invalid identifier")
 
 #major data commands
     def load(self, **kwargs):
-        try:
-            if len(self.existing_db[self.currDB][self.currColl]) == len(kwargs):
-                if not self.__checkValue(kwargs,"load"):
-                    return
-                for key, value in kwargs.items():
-                    self.existing_db[self.currDB][self.currColl][key]['items'].append(value)
-                print("\nMineDB : load : Data loaded")
-            else:
-                print("\nError : load : Incomplete loading")
-        except(AttributeError, TypeError, NameError):
-            raise("\nError : load : All parameters should be string")
+        if len(self.existing_db[self.currDB][self.currColl]) == len(kwargs):
+            if not self.__checkValue(kwargs,"load"):
+                return
+            for key, value in kwargs.items():
+                self.existing_db[self.currDB][self.currColl][key]['items'].append(value)
+            return True
+        else:
+            raise ValueError("Error : load : Incomplete loading")
 
     def modify(self, search_by, search_value, update_field, new_value):
-        try:
-            if self.__checkValue({search_by:search_value,update_field:new_value},"modify"):
-                isPresent=0
-                value_array = self.existing_db[self.currDB][self.currColl][search_by]["items"]
-                for search in range(0,len(value_array)):
-                    if value_array[search] == search_value:
-                        isPresent += 1
-                        pos = search
-                        self.existing_db[self.currDB][self.currColl][update_field]["items"][pos] = new_value
-                        
-                if isPresent == 0:
-                    print("\nError : modify : search_value not exist")
-                else:
-                    print(f"\nMineDB : modify : {isPresent} value(s) modified")
-            else:
-                return False
-        except():
-            raise("\nError : modify : Somthing went wrong")
+        collection = self.existing_db[self.currDB][self.currColl]
+
+        # validate fields and value types
+        self.__checkValue(
+            {search_by: search_value, update_field: new_value},
+            "modify"
+        )
+
+        value_array = collection[search_by]["items"]
+
+        # find matching row indexes
+        indexes = [
+            i for i, v in enumerate(value_array)
+            if v == search_value
+        ]
+
+        if not indexes:
+            raise ValueError("modify: search_value not exist")
+
+        # update all matching rows
+        for i in indexes:
+            collection[update_field]["items"][i] = new_value
+
+        return True
+
 
     def remove(self, search_by, search_value):
-        try:
-            if self.__checkValue({search_by:search_value},"modify"):
-                isPresent=0
-                value_array = self.existing_db[self.currDB][self.currColl][search_by]["items"]
-                for check in range(len(value_array)):
-                    if search_value in value_array:
-                        isPresent += 1
-                        pos = value_array.index(search_value)
-                        for del_field in self.existing_db[self.currDB][self.currColl]:
-                            self.existing_db[self.currDB][self.currColl][del_field]["items"].pop(pos)
-                        
-                if isPresent == 0:
-                    print("\nError : remove : search_value not exist")
-                else:
-                    print(f"\nMineDB : remove : {isPresent} value(s) removed")
+        collection = self.existing_db[self.currDB][self.currColl]
+
+        # validate search field and value type
+        self.__checkValue({search_by: search_value}, "remove")
+
+        value_array = collection[search_by]["items"]
+
+        # find all matching indexes
+        indexes = [
+            i for i, v in enumerate(value_array)
+            if v == search_value
+        ]
+
+        if not indexes:
+            raise ValueError("remove: search_value not exist")
+
+        # remove from highest index to lowest (no drift)
+        for i in reversed(indexes):
+            for field in collection:
+                collection[field]["items"].pop(i)
+
+        return True
+
+
+    def explore(self,*args):
+        exp = {}
+        for value in args:
+            if value in self.existing_db[self.currDB][self.currColl]:
+                exp[value]=self.existing_db[self.currDB][self.currColl][value]["items"]
             else:
-                return
-        except():
-            raise("\nError : modify : Somthing went wrong")
-
-    def explore(self,*args, condition=None):
-        try:
-            print(f"\nMineDB : Exploring : {self.currColl}")
-            if condition == None:
-                for value in args:
-                    if value in self.existing_db[self.currDB][self.currColl]:
-                        print(value," : ",self.existing_db[self.currDB][self.currColl][value]["items"])
-                    else:
-                        print("Error : explore : Field not exist")
-        except():
-            raise("\nError : modify : Somthing went wrong")
-
+                raise KeyError("Error : explore : Field not exist")
+        return exp
+    
     def exploreAll(self):
         try:
-            print(f"\nMineDB : Exploring All : {self.currColl}")
+            exp={}
             for value in self.existing_db[self.currDB][self.currColl]:
-                print(value," : ",self.existing_db[self.currDB][self.currColl][value]["items"])
-        except(TypeError):
-            print("\nError : exploreAll : something went wrong, check setup of database and column")
+                exp[value]=self.existing_db[self.currDB][self.currColl][value]["items"]
+            return exp
+        except(TypeError, KeyError) as e:
+            raise RuntimeError("Error : exploreAll : something went wrong, check setup of database and column") from e

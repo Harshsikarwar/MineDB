@@ -4,40 +4,49 @@ from cryptography.fernet import Fernet
 import json
 import os
 class MineDB(BasicCommands, DataCommands):
-    version = "1.1v"
-    existing_db={"sample":{"data":{"version":"1.1v","developer":"hrs_developers"}}}
-    __path = os.path.join(os.getcwd(), "MineDB", "secure.dat")
-    __key = None
-    __cipher = None
 
     def __init__(self):
-        print(f"MineDB - version - {self.version}")
-        try:
-            #if dbfile and key already created
-            with open(os.path.join(os.getcwd(), "MineDB", "MineDBKey.key"),"rb") as f:
-                self.__key = f.read()
-            self.__cipher = Fernet(self.__key) 
+        self.version = "1.1.0"
+        self.existing_db={"sample":{"data":{"version":"1.1v","developer":"hrs_developers"}}}
+        self.currDB = "sample"
+        self.currColl = "data"
 
-        except(FileNotFoundError):
-            #if dbfile and key nots created
-            self.__key = Fernet.generate_key()
-            with open(os.path.join(os.getcwd(), "MineDB", "MineDBKey.key"),"wb") as f:
-                f.write(self.__key)
-            self.__cipher = Fernet(self.__key)
-            print("\nMineDB : Setup is ready")
-            self.save()
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.__path = os.path.join(base_dir, "secure.dat")
+        self.__key_path = os.path.join(base_dir, "MineDBKey.key")
 
-        encrypted_data = ""
-        with open(self.__path,"rb") as f:
-            encrypted_data = f.read()
-        
-        decrypted_data = self.__cipher.decrypt(encrypted_data)
-        self.existing_db = json.loads(decrypted_data)    
+        os.makedirs(base_dir, exist_ok=True)
+
+        #checking for key
+        if os.path.exists(self.__key_path):
+            with open(self.__key_path, "rb") as f:
+                key = f.read()
+        else:
+            key = Fernet.generate_key()
+            with open(self.__key_path, "wb") as f:
+                f.write(key)
+
+        self.__cipher = Fernet(key)
+
+        #checking for exsting_db
+        if os.path.exists(self.__path):
+            with open(self.__path, "rb") as f:
+                encrypted_data = f.read()
+            decrypted_data = self.__cipher.decrypt(encrypted_data)
+            self.existing_db = json.loads(decrypted_data)
+        else:
+            self.existing_db = {
+                "sample": {
+                    "data": {
+                        "version": self.version,
+                        "developer": "hrs_developers"
+                    }
+                }
+            }
+            self.save()    
 
     def save(self):
         json_data = json.dumps(self.existing_db).encode()
         encrypted_data = self.__cipher.encrypt(json_data)
         with open(self.__path,"wb") as f:
             f.write(encrypted_data)
-        
-        print("\nMineDB : Save Successfully")
