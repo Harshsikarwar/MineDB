@@ -25,7 +25,7 @@ class BasicCommands:
                 self.existing_db[dbName]={}
                 print("\nMineDB : Database created")
         except(AttributeError, TypeError, ValueError):
-            print("Error : CreateDB : All parameters should be string")
+            raise("Error : CreateDB : All parameters should be string")
 
     def showDB(self,dbName:str=None):
         if not self.__checkIns([dbName], "showDB"):
@@ -43,7 +43,7 @@ class BasicCommands:
                     print(db, end=" | ")
                 print()
         except(AttributeError, TypeError, ValueError):
-            print("\nError : showDB : All parameters should be string")
+            raise("\nError : showDB : All parameters should be string")
     
     def dropDB(self,dbName:str):
         if dbName == "sample":
@@ -57,7 +57,7 @@ class BasicCommands:
             else:
                 print("\nError : dropDB : Database not exist")
         except(AttributeError, TypeError, ValueError):
-            print("Error : dropDB : All parameters should be string")
+            raise("Error : dropDB : All parameters should be string")
     
     def renameDB(self, dbName:str, newName:str):
         if not self.__checkIns([dbName, newName], "renameDB"):
@@ -83,7 +83,7 @@ class BasicCommands:
                 print("\nError : renameDB : Database not exist")
                 return
         except(AttributeError, TypeError, ValueError):
-            print("Error : renameDB : All parameters should be string")
+            raise("Error : renameDB : All parameters should be string")
 
 #collection commands
 
@@ -117,7 +117,7 @@ class BasicCommands:
                 print("\nError : createCollection : Database not exist")
                 return
         except(AttributeError, TypeError, ValueError):
-            print("Error : createCollection : All parameters should be string")
+            raise("Error : createCollection : All parameters should be string")
 
     def showCollection(self,dbName:str,colName=None):
         if not self.__checkIns([dbName,colName],"showCollection"):
@@ -139,7 +139,7 @@ class BasicCommands:
             else:
                 print("\nError : showCollection : Database not exist")
         except(AttributeError, TypeError, ValueError):
-            print("Error : showCollection : All parameters should be string")
+            raise("Error : showCollection : All parameters should be string")
     
     def dropCollection(self, dbName:str, colName:str):
         if not self.__checkIns([dbName,colName], "dropCollection"):
@@ -154,7 +154,7 @@ class BasicCommands:
             else:
                 print("\nError : dropCollection : Database not exist")
         except(AttributeError, TypeError, ValueError):
-            print("Error : dropCollection : All parameters should be string")
+            raise("Error : dropCollection : All parameters should be string")
     
     def renameCollection(self, dbName:str, colName:str, newName:str):
         if not self.__checkIns([dbName, colName, newName], "renameCollection"):
@@ -182,7 +182,7 @@ class BasicCommands:
                 print("\nError : renameCollection : Database not exist")
                 return
         except(AttributeError, TypeError, ValueError):
-            print("Error : renameCollection : All parameters should be string")
+            raise("Error : renameCollection : All parameters should be string")
 
  #Alter Commands
 
@@ -209,7 +209,7 @@ class BasicCommands:
                 print("\nError : alterFieldType : Database not exist")
                 return
         except(AttributeError, TypeError, ValueError):
-            print("Error : alterFieldType : All parameters should be string")
+            raise("Error : alterFieldType : All parameters should be string")
     
     def alterFieldName(self, dbName:str, colName:str, fieldName:str, newName:str):
         if not self.__checkIns([dbName,colName,fieldName,newName], "alterFieldName"):
@@ -241,7 +241,7 @@ class BasicCommands:
                 print("\nError : alterFieldType : Database not exist")
                 return
         except(AttributeError, TypeError, ValueError):
-            print("Error : alterFieldType : All parameters should be string")
+            raise("Error : alterFieldType : All parameters should be string")
     
     def alterDropField(self, dbName:str, colName:str, fieldName:str):
         if not self.__checkIns([dbName, colName, fieldName]):
@@ -262,7 +262,7 @@ class BasicCommands:
                 print("\nError : alterDropFiled : Database not exist")
                 return  
         except(ValueError, NameError, TypeError):
-            print("Error : alterFieldType : All parameters should be string")
+            raise("Error : alterFieldType : All parameters should be string")
 
     def alterAddFiled(self, dbName:str, colName:str, fieldName:str, dataType:str):
         if not self.__checkIns([dbName, colName, fieldName]):
@@ -283,4 +283,4 @@ class BasicCommands:
                 print("\nError : alterAddFiled : Database not exist")
                 return  
         except(ValueError, NameError, TypeError):
-            print("Error : alterFieldType : All parameters should be string")
+            raise("Error : alterFieldType : All parameters should be string")

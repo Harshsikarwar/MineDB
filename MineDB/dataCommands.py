@@ -91,51 +91,60 @@ class DataCommands:
             else:
                 print("\nError : load : Incomplete loading")
         except(AttributeError, TypeError, NameError):
-            print("\nError : load : All parameters should be string")
+            raise("\nError : load : All parameters should be string")
 
     def modify(self, search_by, search_value, update_field, new_value):
-        if self.__checkValue({search_by:search_value,update_field:new_value},"modify"):
-            isPresent=0
-            value_array = self.existing_db[self.currDB][self.currColl][search_by]["items"]
-            for search in range(0,len(value_array)):
-                if value_array[search] == search_value:
-                    isPresent += 1
-                    pos = search
-                    self.existing_db[self.currDB][self.currColl][update_field]["items"][pos] = new_value
-                    
-            if isPresent == 0:
-                print("\nError : modify : search_value not exist")
+        try:
+            if self.__checkValue({search_by:search_value,update_field:new_value},"modify"):
+                isPresent=0
+                value_array = self.existing_db[self.currDB][self.currColl][search_by]["items"]
+                for search in range(0,len(value_array)):
+                    if value_array[search] == search_value:
+                        isPresent += 1
+                        pos = search
+                        self.existing_db[self.currDB][self.currColl][update_field]["items"][pos] = new_value
+                        
+                if isPresent == 0:
+                    print("\nError : modify : search_value not exist")
+                else:
+                    print(f"\nMineDB : modify : {isPresent} value(s) modified")
             else:
-                print(f"\nMineDB : modify : {isPresent} value(s) modified")
-        else:
-            return
+                return False
+        except():
+            raise("\nError : modify : Somthing went wrong")
 
     def remove(self, search_by, search_value):
-        if self.__checkValue({search_by:search_value},"modify"):
-            isPresent=0
-            value_array = self.existing_db[self.currDB][self.currColl][search_by]["items"]
-            for check in range(len(value_array)):
-                if search_value in value_array:
-                    isPresent += 1
-                    pos = value_array.index(search_value)
-                    for del_field in self.existing_db[self.currDB][self.currColl]:
-                        self.existing_db[self.currDB][self.currColl][del_field]["items"].pop(pos)
-                    
-            if isPresent == 0:
-                print("\nError : remove : search_value not exist")
+        try:
+            if self.__checkValue({search_by:search_value},"modify"):
+                isPresent=0
+                value_array = self.existing_db[self.currDB][self.currColl][search_by]["items"]
+                for check in range(len(value_array)):
+                    if search_value in value_array:
+                        isPresent += 1
+                        pos = value_array.index(search_value)
+                        for del_field in self.existing_db[self.currDB][self.currColl]:
+                            self.existing_db[self.currDB][self.currColl][del_field]["items"].pop(pos)
+                        
+                if isPresent == 0:
+                    print("\nError : remove : search_value not exist")
+                else:
+                    print(f"\nMineDB : remove : {isPresent} value(s) removed")
             else:
-                print(f"\nMineDB : remove : {isPresent} value(s) removed")
-        else:
-            return
+                return
+        except():
+            raise("\nError : modify : Somthing went wrong")
 
     def explore(self,*args, condition=None):
-        print(f"\nMineDB : Exploring : {self.currColl}")
-        if condition == None:
-            for value in args:
-                if value in self.existing_db[self.currDB][self.currColl]:
-                    print(value," : ",self.existing_db[self.currDB][self.currColl][value]["items"])
-                else:
-                    print("Error : explore : Field not exist")
+        try:
+            print(f"\nMineDB : Exploring : {self.currColl}")
+            if condition == None:
+                for value in args:
+                    if value in self.existing_db[self.currDB][self.currColl]:
+                        print(value," : ",self.existing_db[self.currDB][self.currColl][value]["items"])
+                    else:
+                        print("Error : explore : Field not exist")
+        except():
+            raise("\nError : modify : Somthing went wrong")
 
     def exploreAll(self):
         try:
