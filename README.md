@@ -1,4 +1,4 @@
-MineDB
+# MineDB
 
 PyPI: https://pypi.org/project/minedb/
 
@@ -26,7 +26,7 @@ lightweight, local use cases.
 
 ---------------------------------------------------------------------
 
-Installation
+## Installation
 
 Install MineDB using pip:
 
@@ -34,7 +34,7 @@ pip install minedb
 
 ---------------------------------------------------------------------
 
-Basic Usage
+## Basic Usage
 
 Create a MineDB instance:
 
@@ -70,7 +70,7 @@ db.save()
 
 ---------------------------------------------------------------------
 
-How MineDB works
+## How MineDB works
 
 - Data is stored locally on disk
 - Data is encrypted before being written to disk
@@ -83,7 +83,7 @@ MineDB prioritizes correctness and safety over convenience.
 
 ---------------------------------------------------------------------
 
-Schema and Data Types
+## Schema and Data Types
 
 Supported data types:
 - text
@@ -97,7 +97,7 @@ will raise an error.
 
 ---------------------------------------------------------------------
 
-Schema Changes
+## Schema Changes
 
 You can safely change the structure of a collection:
 
@@ -115,7 +115,7 @@ db.alterFieldType("app", "settings", "notifications", "int")
 
 ---------------------------------------------------------------------
 
-Encryption
+## Encryption
 
 MineDB encrypts all stored data using cryptography. The encryption key is
 generated automatically on first use and reused for future sessions.
@@ -125,7 +125,7 @@ not designed for high-threat security environments.
 
 ---------------------------------------------------------------------
 
-Error Handling
+## Error Handling
 
 MineDB raises errors when invalid operations are performed. Examples include:
 - Using invalid data types
@@ -136,7 +136,7 @@ Errors are raised explicitly to prevent silent failures.
 
 ---------------------------------------------------------------------
 
-Testing
+## Testing
 
 MineDB is fully tested using pytest. Tests cover:
 - Schema integrity
@@ -147,26 +147,26 @@ MineDB is fully tested using pytest. Tests cover:
 
 ---------------------------------------------------------------------
 
-Requirements
+## Requirements
 
 - Python 3.9 or higher
 - cryptography
 
 ---------------------------------------------------------------------
 
-License
+## License
 
 MineDB is released under the MIT License. See the LICENSE file for details.
 
 ---------------------------------------------------------------------
 
-Author
+## Author
 
 Harsh Singh Sikarwar
 
 ---------------------------------------------------------------------
 
-Disclaimer
+## Disclaimer
 
 MineDB is intended for lightweight local storage use cases. It is not designed
 to replace full database systems or distributed storage solutions.
