@@ -1,6 +1,8 @@
 class DataCommands:
 
 #datatype and value validation commands
+
+    #checks function attribute should be string
     def __checkIns(self, value, source=None):
         for v in value:
             if v == None:
@@ -9,6 +11,7 @@ class DataCommands:
                 raise ValueError(f"Error : valueError : {source} : Value should be string")
         return  True
 
+    #checks for loading/modifing value datatype
     def __checkValueType(self, value, source=None):
         if isinstance(value,str):
             if len(value) > 1:
@@ -24,8 +27,8 @@ class DataCommands:
         else:
             raise ValueError(f"Error : {source} : Invalid data type of value {value}")
 
+    #checking valiadation of loading/modifing data
     def __checkValue(self, loadData, source=None):
-        #checking valiadation of loading/modifing data
         for key, value in loadData.items():
             if key in self.existing_db[self.currDB][self.currColl]:
                 if value == None or value == "None":
@@ -102,7 +105,6 @@ class DataCommands:
 
         return True
 
-
     def remove(self, search_by, search_value):
         collection = self.existing_db[self.currDB][self.currColl]
 
@@ -126,7 +128,6 @@ class DataCommands:
                 collection[field]["items"].pop(i)
 
         return True
-
 
     def explore(self,*args):
         exp = {}

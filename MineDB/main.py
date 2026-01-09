@@ -6,7 +6,7 @@ import os
 class MineDB(BasicCommands, DataCommands):
 
     def __init__(self):
-        self.version = "1.1.0"
+        self.version = "1.0.0"
         self.existing_db={"sample":{"data":{"version":"1.1v","developer":"hrs_developers"}}}
         self.currDB = "sample"
         self.currColl = "data"
@@ -18,9 +18,11 @@ class MineDB(BasicCommands, DataCommands):
         os.makedirs(base_dir, exist_ok=True)
 
         #checking for key
+        #if present load
         if os.path.exists(self.__key_path):
             with open(self.__key_path, "rb") as f:
                 key = f.read()
+        #if not present create
         else:
             key = Fernet.generate_key()
             with open(self.__key_path, "wb") as f:
@@ -29,11 +31,13 @@ class MineDB(BasicCommands, DataCommands):
         self.__cipher = Fernet(key)
 
         #checking for exsting_db
+        #if present load
         if os.path.exists(self.__path):
             with open(self.__path, "rb") as f:
                 encrypted_data = f.read()
             decrypted_data = self.__cipher.decrypt(encrypted_data)
             self.existing_db = json.loads(decrypted_data)
+        #if not present create with sample
         else:
             self.existing_db = {
                 "sample": {

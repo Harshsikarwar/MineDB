@@ -1,5 +1,6 @@
 class BasicCommands:
 
+    #checks function attribute should be string
     def __checkIns(self, value=None, source=None):
         if value == None:
             value = []
@@ -10,6 +11,7 @@ class BasicCommands:
                 raise ValueError(f"Error : valueError : {source} : Value should be string")
         return  True
 
+    #checks attribute items lenght to prevent corruption
     def __checkItemLength(self, dbName, colName):
         if dbName not in self.existing_db:
             return False

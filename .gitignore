@@ -1,11 +1,18 @@
 # Python cache
 __pycache__/
 *.pyc
+.pytest_cache/
 
-# Ignore runtime data & secrets inside MineDB
-MineDB/data/
-MineDB/secrets/
+# Build artifacts
+dist/
+build/
+*.egg-info/
 
-# Ignore keys and data files everywhere
-*.key
-*.dat
+# Virtual environments
+venv/
+.env/
+
+# MineDB runtime-generated files
+MineDB/secure.dat
+MineDB/MineDBKey.key
+
