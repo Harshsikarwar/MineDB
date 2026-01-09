@@ -1,2 +1,2 @@
-from .main import MineDB, __version__
+from .main import MineDB
 __all__ = ["MineDB"]
