@@ -1,113 +1,172 @@
 MineDB
 
-MineDB is a lightweight, encrypted, dictionary-based local database written in Python.
-It is designed to be simple, schema-safe, and usable directly after installation
-without requiring any external database server.
+PyPI: https://pypi.org/project/minedb/
 
-PyPI: https://pypi.org/project/minedb/
+MineDB is a lightweight Python library that provides local persistent storage
+for Python applications. It allows you to store data on disk, retrieve it later,
+and work with it safely without using an external database.
 
-MineDB is ideal for:
-- Small to medium projects
-- Local persistence
-- Configuration storage
-- Lightweight applications where SQLite or full databases are overkill
+MineDB is designed to be simple, predictable, and safe. It focuses on local
+storage use cases such as application state, configuration data, and small
+datasets that need to persist between program runs.
 
+---------------------------------------------------------------------
 
-FEATURES
---------
-- Encrypted local storage (Fernet encryption)
-- Pure Python, pip-installable
-- Schema-safe operations (no silent corruption)
-- Dictionary-based column-oriented storage
-- Safe schema evolution (add/drop/rename fields)
-- Fully tested with pytest
-- No external database required
+What MineDB does
 
+MineDB provides:
+- Persistent local storage
+- Structured data storage with schemas
+- Type validation
+- Encrypted storage on disk
+- Safe modification and removal of stored data
 
-INSTALLATION
-------------
+MineDB does NOT aim to replace full database systems. It is intended for
+lightweight, local use cases.
+
+---------------------------------------------------------------------
+
+Installation
+
+Install MineDB using pip:
+
 pip install minedb
 
+---------------------------------------------------------------------
 
-QUICK START
------------
+Basic Usage
+
+Create a MineDB instance:
+
 from MineDB import MineDB
 
 db = MineDB()
 
-db.createDB("testdb")
+Create a database and a collection with a defined structure:
+
+db.createDB("app")
 db.createCollection(
-    "testdb",
-    "users",
-    id="int",
-    active="bool"
+    "app",
+    "settings",
+    theme="text",
+    notifications="bool"
 )
 
-db.load(id=1, active=True)
-db.load(id=2, active=False)
+Store data:
 
-db.modify("id", 1, "active", False)
-db.remove("id", 2)
+db.load(theme="dark", notifications=True)
+
+Modify stored data:
+
+db.modify("theme", "dark", "notifications", False)
+
+Remove stored data:
+
+db.remove("theme", "dark")
+
+Save data to disk:
 
 db.save()
 
+---------------------------------------------------------------------
 
-HOW MINEDB WORKS
-----------------
-- Data is stored as encrypted JSON on disk
-- Each collection uses column-oriented storage
-- All operations enforce schema consistency
-- Partial writes and index drift are prevented by design
+How MineDB works
 
-MineDB guarantees that all fields in a collection always remain aligned.
+- Data is stored locally on disk
+- Data is encrypted before being written to disk
+- Each collection has a fixed structure (schema)
+- All fields in a collection always stay aligned
+- Invalid data types raise errors immediately
+- Partial writes and silent corruption are prevented
 
+MineDB prioritizes correctness and safety over convenience.
 
-SCHEMA OPERATIONS
------------------
-Add field:
-db.alterAddField("testdb", "users", "score", "float")
+---------------------------------------------------------------------
 
-Drop field:
-db.alterDropField("testdb", "users", "score")
+Schema and Data Types
 
-Change field type (safe conversion):
-db.alterFieldType("testdb", "users", "active", "int")
+Supported data types:
+- text
+- int
+- float
+- bool
+- chr
 
+MineDB enforces data types strictly. Attempting to store an invalid type
+will raise an error.
 
-ENCRYPTION
-----------
-MineDB uses cryptography.Fernet for encryption.
-- Data is always stored encrypted on disk
-- Encryption key is generated on first run
-- Key is reused safely across sessions
+---------------------------------------------------------------------
 
-Note: MineDB encryption is intended for local protection,
-not high-threat adversarial environments.
+Schema Changes
 
+You can safely change the structure of a collection:
 
-TESTING
--------
-Run tests using:
-pytest
+Add a new field:
 
+db.alterAddField("app", "settings", "font_size", "int")
 
-REQUIREMENTS
-------------
-Python 3.9 or higher
-cryptography
+Remove a field:
 
+db.alterDropField("app", "settings", "font_size")
 
-LICENSE
--------
-MIT License (see LICENSE.txt)
+Change a field type (with safe conversion):
 
+db.alterFieldType("app", "settings", "notifications", "int")
 
-AUTHOR
-------
+---------------------------------------------------------------------
+
+Encryption
+
+MineDB encrypts all stored data using cryptography. The encryption key is
+generated automatically on first use and reused for future sessions.
+
+Encryption is intended to protect local data from casual inspection. It is
+not designed for high-threat security environments.
+
+---------------------------------------------------------------------
+
+Error Handling
+
+MineDB raises errors when invalid operations are performed. Examples include:
+- Using invalid data types
+- Accessing missing fields or collections
+- Attempting unsafe schema changes
+
+Errors are raised explicitly to prevent silent failures.
+
+---------------------------------------------------------------------
+
+Testing
+
+MineDB is fully tested using pytest. Tests cover:
+- Schema integrity
+- Data insertion and removal
+- Type validation
+- Index alignment
+- Safe schema modification
+
+---------------------------------------------------------------------
+
+Requirements
+
+- Python 3.9 or higher
+- cryptography
+
+---------------------------------------------------------------------
+
+License
+
+MineDB is released under the MIT License. See the LICENSE file for details.
+
+---------------------------------------------------------------------
+
+Author
+
 Harsh Singh Sikarwar
 
+---------------------------------------------------------------------
 
-DISCLAIMER
-----------
-MineDB is intended for local and lightweight use cases.
-It is not a replacement for full-scale database systems.
+Disclaimer
+
+MineDB is intended for lightweight local storage use cases. It is not designed
+to replace full database systems or distributed storage solutions.
