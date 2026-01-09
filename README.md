@@ -4,6 +4,8 @@ MineDB is a lightweight, encrypted, dictionary-based local database written in P
 It is designed to be simple, schema-safe, and usable directly after installation
 without requiring any external database server.
 
+PyPI: https://pypi.org/project/minedb/
+
 MineDB is ideal for:
 - Small to medium projects
 - Local persistence
