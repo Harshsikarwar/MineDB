@@ -12,7 +12,7 @@ datasets that need to persist between program runs.
 
 ---------------------------------------------------------------------
 
-What MineDB does
+##What MineDB does
 
 MineDB provides:
 - Persistent local storage
