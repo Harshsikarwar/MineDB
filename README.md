@@ -36,7 +36,7 @@ pip install minedb
 
 ## Basic Usage
 
-Create a MineDB instance:
+### Create a MineDB instance:
 
 from MineDB import MineDB
 
@@ -52,7 +52,7 @@ db.createCollection(
     notifications="bool"
 )
 
-Store data:
+### Store data:
 
 db.load(theme="dark", notifications=True)
 
