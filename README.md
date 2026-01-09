@@ -102,7 +102,7 @@ MIT License (see LICENSE.txt)
 
 AUTHOR
 ------
-Harsh Singh
+Harsh Singh Sikarwar
 
 
 DISCLAIMER
