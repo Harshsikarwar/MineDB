@@ -6,7 +6,7 @@ import os
 class MineDB(BasicCommands, DataCommands):
 
     def __init__(self):
-        self.version = "1.0.1"
+        self.version = "1.0.2"
         self.existing_db={"sample":{"data":{"version":"1.1v","developer":"hrs_developers"}}}
         self.currDB = "sample"
         self.currColl = "data"
