@@ -1,3 +1,19 @@
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "minedb"
+version = "1.0.3"
+description = "A lightweight database utility package"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+  {name = "Your Name"}
+]
+
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["."]
