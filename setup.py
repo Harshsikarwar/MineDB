@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="minedb",
-    version="1.0.2",
+    version="1.0.3",
     author="Harsh Singh Sikarwar",
     description="A lightweight encrypted local database using dictionary-based storage",
     long_description=open("README.md", encoding="utf-8").read(),
